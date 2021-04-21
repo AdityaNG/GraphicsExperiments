@@ -10,12 +10,9 @@
 #else
 #include <GL/glut.h>
 #endif
-#include <math.h>
+#include <cstdio>
 
-#include <thread>
-#include <opencv2/opencv.hpp>
-
-using namespace cv;
+//using namespace cv;
 using namespace std;
 //g++ bk.cpp -lstdc++fs -DWITH_FFMPEG=ON -lpopt -lglut -lGLU -lGL -std=c++11 -pthread `pkg-config --cflags --libs opencv` -w
 
@@ -29,12 +26,11 @@ double x = 0.6;
 double y = 0.6;
 double z = 0.6;
 
-Mat POINTS;
-
-void drawCube()
+void drawCube_color()
 {
         // Set Background Color
     glClearColor(0.4, 0.4, 0.4, 1.0);
+    
         // Clear screen
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -45,17 +41,8 @@ void drawCube()
     glRotatef( rX, 1.0, 0.0, 0.0 );
     glRotatef( rY, 0.0, 1.0, 0.0 );
 
-    glBegin(GL_LINE_LOOP);
-            glColor3f(1, 1, 1);
-                glVertex3f(x, y, z);
-                glVertex3f(x, -y, z);
-                glVertex3f(-x, y, z);
-        glEnd();
-
     glFlush();
     glutSwapBuffers();
-
-    return;
 
     // BACK
         glBegin(GL_TRIANGLES);
@@ -166,6 +153,133 @@ void drawCube()
     glutSwapBuffers();
 }
 
+void drawCube()
+{
+        // Set Background Color
+    glClearColor(0.4, 0.4, 0.4, 1.0);
+    
+        // Clear screen
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Reset transformations
+    glLoadIdentity();
+
+    // Rotate when user changes rX and rY
+    glRotatef( rX, 1.0, 0.0, 0.0 );
+    glRotatef( rY, 0.0, 1.0, 0.0 );
+
+    glFlush();
+    glutSwapBuffers();
+
+    // BACK
+        glBegin(GL_TRIANGLES);
+            glColor3f(1, 1, 1); //(0.4, 0.3, 0.5);
+                glVertex3f(x, y, z);
+                glVertex3f(x, -y, z);
+                glVertex3f(-x, y, z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+            glColor3f(1, 1, 1); //(0.5, 0.3, 0.2);
+                glVertex3f(-x, -y, z);
+                glVertex3f(x, -y, z);
+                glVertex3f(-x, y, z);
+        glEnd();
+
+        // FRONT
+        // Using 4 trianges!
+        glBegin(GL_TRIANGLES);
+            glColor3f(1, 1, 1); //(0.1, 0.5, 0.3);
+                glVertex3f(-x, y, -z);
+                glVertex3f(0, 0, -z);
+                glVertex3f(-x, -y, -z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+                glColor3f(1, 1, 1); //(0.0, 0.5, 0.0);
+                glVertex3f(-x, -y, -z);
+                glVertex3f(0, 0, -z);
+                glVertex3f(x, -y, -z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+            glColor3f(1, 1, 1); //(0.1, 0.3, 0.3);
+                glVertex3f(-x, y, -z);
+                glVertex3f(x, y, -z);
+                glVertex3f(0, 0, -z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+                glColor3f(1, 1, 1); //(0.2, 0.2, 0.2);
+                glVertex3f(0, 0, -z);
+                glVertex3f(x, y, -z);
+                glVertex3f(x, -y, -z);
+        glEnd();
+
+        // LEFT
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 1, 1); //(0.3, 0.5, 0.6);
+                glVertex3f(-x, -y, -z);
+                glVertex3f(-x, -y, z);
+                glVertex3f(-x, y, -z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+                glColor3f(1, 1, 1); //(0.5, 0.5, 0.5);
+                glVertex3f(-x, y, z);
+                glVertex3f(-x, -y, z);
+                glVertex3f(-x, y, -z);
+        glEnd();
+
+        // RIGHT
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 1, 1); //(0.2, 0.2, 0.2);
+                glVertex3f(x, y, z);
+                glVertex3f(x, y, -z);
+                glVertex3f(x, -y, z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 1, 1); //(0.0, 0.0, 0.0);
+                glVertex3f(x, -y, -z);
+                glVertex3f(x, y, -z);
+                glVertex3f(x, -y, z);
+        glEnd();
+
+        // TOP
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 1, 1); //(0.6, 0.0, 0.0);
+                glVertex3f(x, y, z);
+                glVertex3f(x, y, -z);
+                glVertex3f(-x, y, -z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 1, 1); //(0.6, 0.1, 0.2);
+                glVertex3f(-x, y, z);
+                glVertex3f(x, y, z);
+                glVertex3f(-x, y, -z);
+        glEnd();
+
+        // BOTTOM
+        glBegin(GL_TRIANGLES);
+        glColor3f(1, 1, 1); //(0.4, 0.0, 0.4);
+                glVertex3f(-x, -y, -z);
+                glVertex3f(-x, -y, z);
+                glVertex3f(x, -y, z);
+        glEnd();
+
+        glBegin(GL_TRIANGLES);
+                glColor3f(1, 1, 1); //(0.3, 0.0, 0.3);
+                glVertex3f(x, -y, -z);
+                glVertex3f(-x, -y, -z);
+                glVertex3f(x, -y, z);
+        glEnd();
+
+    glFlush();
+    glutSwapBuffers();
+}
+
 void keyboard(int key, int x, int y)
 {
     if (key == GLUT_KEY_RIGHT)
@@ -198,8 +312,6 @@ printf("%d\n", i);
 
 int main(int argc, char **argv)
 {
-float dummy_data[10] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-POINTS = Mat(3, 3, CV_32F, dummy_data);
         // Initialize GLUT and process user parameters
         glutInit(&argc, argv);
 
@@ -216,15 +328,11 @@ POINTS = Mat(3, 3, CV_32F, dummy_data);
         glEnable(GL_DEPTH_TEST);
 
         // Callback functions
-        glutDisplayFunc(drawCube);
+        glutDisplayFunc(drawCube_color);
         glutSpecialFunc(keyboard);
-
-//thread th1(test);
 
         // Pass control to GLUT for events
         glutMainLoop();
-
-//th1.join();
 
         return 0;
 }
